@@ -215,8 +215,14 @@ async def cancel_xo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("No active game to cancel.")
 
-def add_xo_handlers(application):
-    """Add all XO game handlers to the application"""
+# Minimal module interface required by your dynamic loading system
+def __migrate__(old_chat_id, new_chat_id):
+    pass
+
+def __stats__():
+    return ""
+
+def __handlers__(application):
     application.add_handler(CommandHandler("xo", start_xo))
     application.add_handler(CommandHandler("joinxo", join_xo))
     application.add_handler(CommandHandler("cancelxo", cancel_xo))
