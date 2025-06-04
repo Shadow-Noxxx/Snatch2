@@ -29,7 +29,7 @@ async def get_next_sequence_number(sequence_name):
     return sequence_document['sequence_value']
 
 async def upload(update: Update, context: CallbackContext) -> None:
-    if str(update.effective_user.id) not in sudo_users and str(update.effective_user.id) not in OWNER_ID:
+    if str(update.effective_user.id) not in sudo_users :
         await update.message.reply_text('Ask My Owner...')
         return
 
