@@ -28,37 +28,60 @@ async def get_next_sequence_number(sequence_name):
         return 0
     return sequence_document['sequence_value']
 
+from telegram.constants import ChatAction
+
 async def upload(update: Update, context: CallbackContext) -> None:
-    if str(update.effective_user.id) not in sudo_users :
+    if str(update.effective_user.id) not in sudo_users:
         await update.message.reply_text('Ask My Owner...')
         return
 
     try:
         args = context.args
-        if len(args) != 4:
+        reply = update.message.reply_to_message
+
+        if not reply and len(args) != 4:
             await update.message.reply_text(WRONG_FORMAT_TEXT)
             return
 
-        character_name = args[1].replace('-', ' ').title()
-        anime = args[2].replace('-', ' ').title()
+        # Get image from reply or args[0]
+        if reply and reply.photo:
+            photo = reply.photo[-1]  # get the highest resolution photo
+            file = await photo.get_file()
+            img_url = file.file_path
+        else:
+            # Validate the URL
+            img_url = args[0]
+            try:
+                urllib.request.urlopen(img_url)
+            except:
+                await update.message.reply_text('Invalid URL.')
+                return
 
-        try:
-            urllib.request.urlopen(args[0])
-        except:
-            await update.message.reply_text('Invalid URL.')
-            return
+        # Process text arguments
+        if reply:
+            if len(args) != 3:
+                await update.message.reply_text("When replying to an image, use: `/upload name anime rarity`", parse_mode="Markdown")
+                return
+            character_name = args[0].replace('-', ' ').title()
+            anime = args[1].replace('-', ' ').title()
+            rarity_input = args[2]
+        else:
+            character_name = args[1].replace('-', ' ').title()
+            anime = args[2].replace('-', ' ').title()
+            rarity_input = args[3]
 
+        # Handle rarity
         rarity_map = {1: "⚪ Common", 2: "🟣 Rare", 3: "🟡 Legendary", 4: "🟢 Medium"}
         try:
-            rarity = rarity_map[int(args[3])]
+            rarity = rarity_map[int(rarity_input)]
         except KeyError:
-            await update.message.reply_text('Invalid rarity. Please use 1, 2, 3, 4, or 5.')
+            await update.message.reply_text('Invalid rarity. Please use 1, 2, 3, or 4.')
             return
 
         id = str(await get_next_sequence_number('character_id')).zfill(2)
 
         character = {
-            'img_url': args[0],
+            'img_url': img_url,
             'name': character_name,
             'anime': anime,
             'rarity': rarity,
@@ -66,21 +89,26 @@ async def upload(update: Update, context: CallbackContext) -> None:
         }
 
         try:
+            await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.UPLOAD_PHOTO)
+
             message = await context.bot.send_photo(
                 chat_id=CHARA_CHANNEL_ID,
-                photo=args[0],
+                photo=img_url,
                 caption=f'<b>Character Name:</b> {character_name}\n<b>Anime Name:</b> {anime}\n<b>Rarity:</b> {rarity}\n<b>ID:</b> {id}\nAdded by <a href="tg://user?id={update.effective_user.id}">{update.effective_user.first_name}</a>',
                 parse_mode='HTML'
             )
             character['message_id'] = message.message_id
             await collection.insert_one(character)
-            await update.message.reply_text('CHARACTER ADDED....')
+            await update.message.reply_text('✅ CHARACTER ADDED....')
         except:
             await collection.insert_one(character)
-            update.effective_message.reply_text("Character Added but no Database Channel Found, Consider adding one.")
-        
+            await update.message.reply_text("Character added, but unable to send to channel. Check channel ID and bot permissions.")
+
     except Exception as e:
-        await update.message.reply_text(f'Character Upload Unsuccessful. Error: {str(e)}\nIf you think this is a source error, forward to: {SUPPORT_CHAT}')
+        await update.message.reply_text(
+            f'Character Upload Unsuccessful. Error: {str(e)}\nIf you think this is a source error, forward to: {SUPPORT_CHAT}'
+        )
+
 
 async def delete(update: Update, context: CallbackContext) -> None:
     if str(update.effective_user.id) not in sudo_users:
