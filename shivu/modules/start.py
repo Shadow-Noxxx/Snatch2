@@ -58,7 +58,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         
         
         caption = start_msg
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        reply_markup = keyboard
         photo_url = random.choice(PHOTO_URL)
 
         await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption= start_msg , reply_markup=reply_markup, parse_mode='markdown')
