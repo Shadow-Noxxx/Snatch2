@@ -13,7 +13,6 @@ from telegram.ext import CommandHandler, CallbackContext, MessageHandler, filter
 from shivu import collection, top_global_groups_collection, group_user_totals_collection, user_collection, user_totals_collection, shivuu
 from shivu import application, SUPPORT_CHAT, UPDATE_CHAT, db, LOGGER
 from shivu.modules import ALL_MODULES
-from shivu.modules import add_xo_handlers  
 
 locks = {}
 message_counters = {}
@@ -238,7 +237,6 @@ def main() -> None:
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
-    add_xo_handlers(application)
     application.run_polling(drop_pending_updates=True)
     
 if __name__ == "__main__":
