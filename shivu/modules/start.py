@@ -7,6 +7,11 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 from shivu import application, PHOTO_URL, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAME, db, GROUP_ID
 from shivu import pm_users as collection 
 from shivu.modules import ping
+import time 
+start_time = time.time()
+message = await update.message.reply_text('Pong!')
+end_time = time.time()
+elapsed_time = round((end_time - start_time) * 1000, 3)
 start_msg =  f"""
         *ʜᴇʟʟᴏ...*
 
@@ -19,7 +24,7 @@ start_msg =  f"""
 ᴍᴜsᴛ Jᴏɪɴ :- @The_League_Of_Snatchers*
 
 
-➺ ᴘɪɴɢ: {elasped_time}
+➺ ᴘɪɴɢ: {elapsed_time}
 ➺ ᴜᴘᴛɪᴍᴇ: 
         """
 keyboard = [
