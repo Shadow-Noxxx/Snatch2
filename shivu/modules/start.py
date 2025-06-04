@@ -6,7 +6,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 
 from shivu import application, PHOTO_URL, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAME, db, GROUP_ID
 from shivu import pm_users as collection 
-
+from shivu.modules import ping
 
 async def start(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -45,7 +45,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 ᴍᴜsᴛ Jᴏɪɴ :- @The_League_Of_Snatchers*
 
 
-➺ ᴘɪɴɢ: 
+➺ ᴘɪɴɢ: {ping}
 ➺ ᴜᴘᴛɪᴍᴇ: 
         """
         
