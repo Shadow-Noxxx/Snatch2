@@ -45,7 +45,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 ᴍᴜsᴛ Jᴏɪɴ :- @The_League_Of_Snatchers*
 
 
-➺ ᴘɪɴɢ: {ping}
+➺ ᴘɪɴɢ: {elapsed_time}
 ➺ ᴜᴘᴛɪᴍᴇ: 
         """
         
@@ -71,7 +71,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         ]
         
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="🎴Alive!?... \n connect to me in PM For more information ",reply_markup=reply_markup )
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption= caption ,reply_markup=reply_markup )
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -98,19 +98,28 @@ async def button(update: Update, context: CallbackContext) -> None:
 
     elif query.data == 'back':
 
-        caption = f"""
-        ***Hoyyyy...*** ✨
+        caption = 
+        f"""
+        ʜᴇʟʟᴏ...*
 
-***I am An Open Source Character Catcher Bot..​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem***
+ɪ'ᴍ sɴᴀᴛᴄʜ ʏᴏᴜʀ ᴄʜᴀʀᴀᴄᴛᴇʀ ʙᴏᴛ ᴀ ɢʀᴀʙ ʙᴏᴛ.....
+
+ᴀᴅᴅ ᴍᴇ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴀɴᴅ ɪ ᴡɪʟʟ sᴇɴᴅ ʀᴀɴᴅᴏᴍ ᴄʜᴀʀᴀᴄᴛᴇʀs ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ...
+
+ᴛᴀᴘ ᴏɴ ʜᴇʟᴘ ʙᴜᴛᴛᴏɴ ᴛᴏ sᴇᴇ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs...
+
+ᴍᴜsᴛ Jᴏɪɴ :- @The_League_Of_Snatchers*
+
+
+➺ ᴘɪɴɢ: {elapsed_time}
+➺ ᴜᴘᴛɪᴍᴇ: 
         """
-
         
         keyboard = [
             [InlineKeyboardButton("ADD ME", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
             [InlineKeyboardButton("SUPPORT", url=f'https://t.me/{SUPPORT_CHAT}'),
             InlineKeyboardButton("UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("HELP", callback_data='help')],
-            [InlineKeyboardButton("SOURCE", url=f'https://github.com/MyNameIsShekhar/WAIFU-HUSBANDO-CATCHER')]
+            [InlineKeyboardButton("HELP", callback_data='help')]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
