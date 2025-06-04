@@ -470,7 +470,7 @@ def main() -> None:
     application.add_handler(CommandHandler("cancelxo", cancel_xo))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, xo_players_response))
     # Register XO game handlers
-    xo.setup_handlers(application)
+
 
     application.run_polling(drop_pending_updates=True)
 
