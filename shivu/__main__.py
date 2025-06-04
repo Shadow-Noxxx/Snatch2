@@ -13,7 +13,7 @@ from telegram.ext import CommandHandler, CallbackContext, MessageHandler, filter
 from shivu import collection, top_global_groups_collection, group_user_totals_collection, user_collection, user_totals_collection, shivuu
 from shivu import application, SUPPORT_CHAT, UPDATE_CHAT, db, LOGGER
 from shivu.modules import ALL_MODULES
-
+from shivu.modules import xo
 
 locks = {}
 message_counters = {}
@@ -234,14 +234,19 @@ async def fav(update: Update, context: CallbackContext) -> None:
 
 
 
-def main() -> None:
-    """Run bot."""
+from shivu.modules import xo  # use your actual module name
 
+def main() -> None:
+    # Add your existing handlers
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
 
+    # Add xo handlers
+    xo_module.setup_handlers(application)
+
     application.run_polling(drop_pending_updates=True)
+
     
 if __name__ == "__main__":
     shivuu.start()
