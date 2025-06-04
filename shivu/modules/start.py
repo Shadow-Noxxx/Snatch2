@@ -9,7 +9,6 @@ from shivu import pm_users as collection
 from shivu.modules import ping
 import time 
 start_time = time.time()
-message = await update.message.reply_text('Pong!')
 end_time = time.time()
 elapsed_time = round((end_time - start_time) * 1000, 3)
 start_msg =  f"""
