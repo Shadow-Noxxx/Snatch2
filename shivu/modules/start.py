@@ -19,7 +19,7 @@ start_msg =  f"""
 ᴍᴜsᴛ Jᴏɪɴ :- @The_League_Of_Snatchers*
 
 
-➺ ᴘɪɴɢ: {elapsed_time}
+➺ ᴘɪɴɢ: {elasped_time}
 ➺ ᴜᴘᴛɪᴍᴇ: 
         """
 keyboard = [
