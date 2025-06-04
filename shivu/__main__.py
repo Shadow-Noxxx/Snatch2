@@ -243,7 +243,7 @@ def main() -> None:
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
 
     # Add xo handlers
-    xo_module.setup_handlers(application)
+    xo.setup_handlers(application)
 
     application.run_polling(drop_pending_updates=True)
 
