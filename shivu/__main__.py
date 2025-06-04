@@ -232,20 +232,23 @@ async def fav(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(f'Character {character["name"]} has been added to your favorite...')
     
 
+async def xo_start_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("XO command works!")
 
+application.add_handler(CommandHandler("xo", xo_start_test))
 
 from shivu.modules import xo  # use your actual module name
 
 def main() -> None:
-    # Add your existing handlers
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
 
-    # Add xo handlers
+    # Register XO game handlers
     xo.setup_handlers(application)
 
     application.run_polling(drop_pending_updates=True)
+
 
     
 if __name__ == "__main__":
