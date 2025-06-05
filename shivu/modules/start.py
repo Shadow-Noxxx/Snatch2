@@ -72,7 +72,22 @@ _Ready to snatch 'em all?_
         ]
         
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="🎴Alive!?... \n connect to me in PM For more information ",reply_markup=reply_markup )
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=f"""
+🎴 *Yo! I'm Snatch Bot!* 🎴
+
+I'm your ultimate *Anime Character Catcher*.  
+Add me to your group and I’ll drop 🔥 waifus & husbandos after every 100 messages!  
+Use */guess* to grab 'em, */collection* to show 'em off, and */fav* to save the best ones 💖
+
+🏆 Build your dream harem.  
+📊 Climb the leaderboard.  
+⚔️ Trade. Gift. Dominate.
+
+➤ *Use /help to view all commands*  
+➤ *Must join:* @{SUPPORT_CHAT}  
+
+_Ready to snatch 'em all?_
+""" ,reply_markup=reply_markup )
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
