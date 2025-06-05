@@ -1,5 +1,6 @@
 import random
 import time
+import re
 from html import escape
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
@@ -8,14 +9,18 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 from shivu import application, PHOTO_URL, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAME, db, GROUP_ID
 from shivu import pm_users as collection
 
-from shivu.modules import ping  # Assuming ping is used elsewhere
+from shivu.modules import ping  # if needed
 
-# Initialize uptime and ping time
+# MarkdownV2 escape function
+def escape_md(text):
+    return re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', text)
+
+# Uptime and ping
 start_time = time.time()
 end_time = time.time()
 elapsed_time = round((end_time - start_time) * 1000, 3)
 
-# Start message template
+# Start message
 start_msg = f"""
 *ʜᴇʟʟᴏ...*
 
@@ -27,7 +32,7 @@ start_msg = f"""
 
 ᴍᴜsᴛ Jᴏɪɴ :- @The_League_Of_Snatchers*
 
-➺ ᴘɪɴɢ: {elapsed_time}ms
+➺ ᴘɪɴɢ: {elapsed_time}ms  
 ➺ ᴜᴘᴛɪᴍᴇ: 
 """
 
@@ -63,9 +68,9 @@ async def start(update: Update, context: CallbackContext) -> None:
     await context.bot.send_photo(
         chat_id=chat.id,
         photo=photo_url,
-        caption=start_msg,
+        caption=escape_md(start_msg),
         reply_markup=reply_markup,
-        parse_mode='markdown'
+        parse_mode='MarkdownV2'
     )
 
 async def button(update: Update, context: CallbackContext) -> None:
@@ -74,36 +79,39 @@ async def button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'help':
         help_text = """
-***Help Section:***
+*Help Section:*
 
-`/guess` – Guess a character (group only)  
-`/fav` – Add your favorite  
-`/trade` – Trade characters  
-`/gift` – Gift characters to others (group only)  
-`/collection` – Show your character collection  
-`/topgroups` – View top groups  
-`/top` – View top users  
-`/ctop` – View your group top  
-`/changetime` – Change character appear time (group only)
+`/guess` \\- Guess a character \\(group only\\)  
+`/fav` \\- Add your favorite  
+`/trade` \\- Trade characters  
+`/gift` \\- Gift characters to others \\(group only\\)  
+`/collection` \\- Show your character collection  
+`/topgroups` \\- View top groups  
+`/top` \\- View top users  
+`/ctop` \\- View your group top  
+`/changetime` \\- Change character appear time \\(group only\\)
 """
         help_keyboard = [[InlineKeyboardButton("⤾ Bᴀᴄᴋ", callback_data='back')]]
         reply_markup = InlineKeyboardMarkup(help_keyboard)
+
         await context.bot.edit_message_caption(
             chat_id=query.message.chat_id,
             message_id=query.message.message_id,
-            caption=help_text,
+            caption=escape_md(help_text),
             reply_markup=reply_markup,
-            parse_mode='markdown'
+            parse_mode='MarkdownV2'
         )
 
     elif query.data == 'back':
+        photo_url = random.choice(PHOTO_URL)
         reply_markup = get_main_keyboard()
+
         await context.bot.edit_message_caption(
             chat_id=query.message.chat_id,
             message_id=query.message.message_id,
-            caption=start_msg,
+            caption=escape_md(start_msg),
             reply_markup=reply_markup,
-            parse_mode='markdown'
+            parse_mode='MarkdownV2'
         )
 
 # Handlers
