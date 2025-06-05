@@ -231,12 +231,18 @@ async def fav(update: Update, context: CallbackContext) -> None:
     
 
 
-from shivu.modules import xo  # use your actual module name
+from shivu.modules import xo  # Import your XO module
 
 def main() -> None:
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
+
+    # ✅ Register XO game handlers
+    xo.__handlers__(application)
+
+    application.run_polling(drop_pending_updates=True)
+
     application.run_polling(drop_pending_updates=True)
     
 if __name__ == "__main__":
