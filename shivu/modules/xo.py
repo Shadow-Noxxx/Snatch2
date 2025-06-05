@@ -223,7 +223,7 @@ def __stats__():
     return ""
 
 def __handlers__(application):
-    application.add_handler(CommandHandler("xo", start_xo))
-    application.add_handler(CommandHandler("joinxo", join_xo))
-    application.add_handler(CommandHandler("cancelxo", cancel_xo))
+    application.add_handler(CommandHandler("xo", xo_game, block=False))
+    application.add_handler(CommandHandler("joinxo", join_xo_game, block=False))
+    application.add_handler(CommandHandler("cancelxo", cancel_xo_game, block=False))
     application.add_handler(CallbackQueryHandler(handle_xo_callback, pattern=r"^xo_move:"))
