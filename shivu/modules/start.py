@@ -109,4 +109,3 @@ async def button(update: Update, context: CallbackContext) -> None:
 # Handlers
 application.add_handler(CommandHandler('start', start, block=False))
 application.add_handler(CallbackQueryHandler(button, pattern='^help$|^back$', block=False))
-application.add_handler(start_handler)
