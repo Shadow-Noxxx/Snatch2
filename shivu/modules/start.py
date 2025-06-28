@@ -1,24 +1,24 @@
 import random
+import os
+from pathlib import Path
 from html import escape
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
-from shivu import application, PHOTO_URL, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAME, db, GROUP_ID
+from shivu import application, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAME, db, GROUP_ID
 from shivu import pm_users as collection
 
-# Yoruichi-themed photo URLs
-import os
-from pathlib import Path
-
-# Get the base directory of your project
+# --- Configuration ---
+# Get the absolute path to the assets directory
 BASE_DIR = Path(__file__).parent.parent
-
-# Define the path to your assets folder
 ASSETS_DIR = BASE_DIR / "assets"
 
-# List of Yoruichi image files (now using local paths)
+# Ensure assets directory exists
+os.makedirs(ASSETS_DIR, exist_ok=True)
+
+# List of Yoruichi image files (using local paths)
 YORUICHI_PHOTOS = [
-    str(ASSETS_DIR / "y1.jpg"),
-    str(ASSETS_DIR / "y2.jpg")
+    ASSETS_DIR / "y1.jpg",
+    ASSETS_DIR / "y2.jpg"
 ]
 
 # Command categories with detailed descriptions
@@ -50,13 +50,42 @@ COMMAND_CATEGORIES = {
     }
 }
 
-# Track current help page for users
-help_pages = {}
+# --- Helper Functions ---
+async def send_yoruichi_photo(context, chat_id, caption, reply_markup=None):
+    """Helper function to send a random Yoruichi photo"""
+    # Filter out non-existent files
+    existing_photos = [p for p in YORUICHI_PHOTOS if p.exists()]
+    
+    if not existing_photos:
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="⚠️ No Yoruichi images found! Please check the assets folder."
+        )
+        return
+    
+    photo_path = random.choice(existing_photos)
+    
+    try:
+        with open(photo_path, 'rb') as photo_file:
+            await context.bot.send_photo(
+                chat_id=chat_id,
+                photo=photo_file,
+                caption=caption,
+                reply_markup=reply_markup,
+                parse_mode='markdown'
+            )
+    except Exception as e:
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text=f"⚠️ Error sending photo: {str(e)}"
+        )
 
+# --- Command Handlers ---
 async def start(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     first_name = update.effective_user.first_name
 
+    # Update user data in database
     user_data = await collection.find_one({"_id": user_id})
     if user_data is None:
         await collection.insert_one({"_id": user_id, "first_name": first_name})
@@ -78,17 +107,17 @@ Tap *Shunpo Commands* below to see what I can do!
 """
 
         keyboard = [
-            [InlineKeyboardButton("ADD TO GROUP", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
-            [InlineKeyboardButton("SHIHOIN CLAN", url=f'https://t.me/{SUPPORT_CHAT}'),
-             InlineKeyboardButton("UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("SHUNPO COMMANDS", callback_data='help_main')]
+            [InlineKeyboardButton("➕ ADD TO GROUP", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
+            [InlineKeyboardButton("💎 SHIHOIN CLAN", url=f'https://t.me/{SUPPORT_CHAT}'),
+             InlineKeyboardButton("📢 UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
+            [InlineKeyboardButton("⚡ SHUNPO COMMANDS", callback_data='help_main')]
         ]
-        await context.bot.send_photo(
-            chat_id=update.effective_chat.id,
-            photo=random.choice(YORUICHI_PHOTOS),
-            caption=caption,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode='markdown'
+        
+        await send_yoruichi_photo(
+            context,
+            update.effective_chat.id,
+            caption,
+            InlineKeyboardMarkup(keyboard)
         )
     else:
         caption = f"""
@@ -98,11 +127,10 @@ Tap *Shunpo Commands* below to see what I can do!
 
 Use /help to see my commands, meow~
 """
-        await context.bot.send_photo(
-            chat_id=update.effective_chat.id,
-            photo=random.choice(YORUICHI_PHOTOS),
-            caption=caption,
-            parse_mode='markdown'
+        await send_yoruichi_photo(
+            context,
+            update.effective_chat.id,
+            caption
         )
 
 async def help_command(update: Update, context: CallbackContext) -> None:
@@ -180,7 +208,7 @@ async def button_handler(update: Update, context: CallbackContext) -> None:
         parts = data.split('_')
         await show_command_detail(update, context, parts[1], parts[2])
 
-# Add handlers
+# --- Register Handlers ---
+application.add_handler(CommandHandler('start', start))
 application.add_handler(CommandHandler('help', help_command))
 application.add_handler(CallbackQueryHandler(button_handler, pattern='^help_|^cmd_|^help_main|^help_close'))
-application.add_handler(CommandHandler('start', start))
