@@ -13,7 +13,7 @@ class Config(object):
     BOT_USERNAME = "Yoruichi_ProBot"
     api_id = 23212132
     api_hash = "1c17efa86bdef8f806ed70e81b473c20"
-
+    CHARA_CHANNEL_ID = "-1002620872464"
     
 class Production(Config):
     LOGGER = True
