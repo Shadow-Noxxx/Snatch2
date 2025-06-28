@@ -9,17 +9,71 @@ from shivu import pm_users as collection
 
 # --- Configuration ---
 # Get the absolute path to the assets directory
-BASE_DIR = Path(__file__).parent.parent
+import random
+import os
+from pathlib import Path
+from html import escape
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
+from shivu import application, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAME, db, GROUP_ID
+from shivu import pm_users as collection
+
+# --- Configuration ---
+# Get the correct path to assets
+BASE_DIR = Path(__file__).parent.parent  # Goes up two levels from modules/start.py
 ASSETS_DIR = BASE_DIR / "assets"
 
-# Ensure assets directory exists
-os.makedirs(ASSETS_DIR, exist_ok=True)
+# Debug: Print paths to verify
+print(f"Base directory: {BASE_DIR}")
+print(f"Assets directory: {ASSETS_DIR}")
+print(f"Directory contents: {os.listdir(BASE_DIR)}")
 
-# List of Yoruichi image files (using local paths)
+# List of Yoruichi image files
 YORUICHI_PHOTOS = [
-    ASSETS_DIR / "y1.jpg",
-    ASSETS_DIR / "y2.jpg"
+    "y1.jpg",
+    "y2.jpg"
 ]
+
+# --- Helper Functions ---
+async def send_yoruichi_photo(context, chat_id, caption, reply_markup=None):
+    """Send a random Yoruichi photo with error handling"""
+    try:
+        # Check if assets directory exists
+        if not ASSETS_DIR.exists():
+            raise FileNotFoundError(f"Assets directory not found at {ASSETS_DIR}")
+        
+        # Find existing photos
+        existing_photos = []
+        for photo in YORUICHI_PHOTOS:
+            photo_path = ASSETS_DIR / photo
+            if photo_path.exists():
+                existing_photos.append(photo_path)
+            else:
+                print(f"Warning: Image not found - {photo_path}")
+
+        if not existing_photos:
+            raise FileNotFoundError(f"No images found in {ASSETS_DIR}")
+        
+        # Select and send random photo
+        photo_path = random.choice(existing_photos)
+        with open(photo_path, 'rb') as photo_file:
+            await context.bot.send_photo(
+                chat_id=chat_id,
+                photo=photo_file,
+                caption=caption,
+                reply_markup=reply_markup,
+                parse_mode='markdown'
+            )
+            
+    except Exception as e:
+        error_msg = f"⚠️ Error sending photo: {str(e)}"
+        print(error_msg)  # Log to console
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text=error_msg
+        )
+
+# [Rest of your code remains the same...]
 
 # Command categories with detailed descriptions
 COMMAND_CATEGORIES = {
@@ -51,34 +105,7 @@ COMMAND_CATEGORIES = {
 }
 
 # --- Helper Functions ---
-async def send_yoruichi_photo(context, chat_id, caption, reply_markup=None):
-    """Helper function to send a random Yoruichi photo"""
-    # Filter out non-existent files
-    existing_photos = [p for p in YORUICHI_PHOTOS if p.exists()]
-    
-    if not existing_photos:
-        await context.bot.send_message(
-            chat_id=chat_id,
-            text="⚠️ No Yoruichi images found! Please check the assets folder."
-        )
-        return
-    
-    photo_path = random.choice(existing_photos)
-    
-    try:
-        with open(photo_path, 'rb') as photo_file:
-            await context.bot.send_photo(
-                chat_id=chat_id,
-                photo=photo_file,
-                caption=caption,
-                reply_markup=reply_markup,
-                parse_mode='markdown'
-            )
-    except Exception as e:
-        await context.bot.send_message(
-            chat_id=chat_id,
-            text=f"⚠️ Error sending photo: {str(e)}"
-        )
+
 
 # --- Command Handlers ---
 async def start(update: Update, context: CallbackContext) -> None:
