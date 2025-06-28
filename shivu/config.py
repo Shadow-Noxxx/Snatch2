@@ -6,7 +6,7 @@ class Config(object):
     sudo_users = "7819315360" , "6138142369"
     GROUP_ID = "-1002003248653"
     TOKEN = "7252339580:AAFFkJRdl32Xhoiitj9WUsS5wI590mpcoVc"
-    mongo_url = "mongodb+srv://<shadow>:<shadow123>@cluster0.4qbhmds.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    mongo_url = "mongodb+srv://shadow:shadow123@cluster0.vmjl9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     PHOTO_URL = ["https://telegra.ph/file/b925c3985f0f325e62e17.jpg", "https://telegra.ph/file/4211fb191383d895dab9d.jpg"]
     SUPPORT_CHAT = "MidexozSupport"
     UPDATE_CHAT = "MidexozBotUpdates"
