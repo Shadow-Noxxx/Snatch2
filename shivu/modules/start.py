@@ -6,10 +6,20 @@ from shivu import application, PHOTO_URL, SUPPORT_CHAT, UPDATE_CHAT, BOT_USERNAM
 from shivu import pm_users as collection
 
 # Yoruichi-themed photo URLs
+import os
+from pathlib import Path
+
+# Get the base directory of your project
+BASE_DIR = Path(__file__).parent.parent
+
+# Define the path to your assets folder
+ASSETS_DIR = BASE_DIR / "assets"
+
+# List of Yoruichi image files (now using local paths)
 YORUICHI_PHOTOS = [
-    "https://example.com/yoruichi1.jpg",
-    "https://example.com/yoruichi2.jpg",
-    "https://example.com/yoruichi3.jpg"
+    str(ASSETS_DIR / "yoruichi1.jpg"),
+    str(ASSETS_DIR / "yoruichi2.jpg"),
+    str(ASSETS_DIR / "yoruichi3.jpg")
 ]
 
 # Command categories with detailed descriptions
