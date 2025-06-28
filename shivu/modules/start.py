@@ -148,18 +148,28 @@ Tap *Shunpo Commands* below to see what I can do!
         )
     else:
         caption = f"""
-⚡ *Yoruichi's Management Activated* ⚡
+🐾 *Yoruichi's Stealth Force Management* 🐾
 
-*"This place is now under Shihoin Clan protection!"*
+*"Did you really think you could see me coming?"*
 
-Use /help to see my commands, meow~
+Welcome, {first_name}! I'm your Yoruichi-themed management bot, here to help you run your groups with feline grace and lightning speed.
+
+Tap *Shunpo Commands* below to see what I can do!
 """
+
+        keyboard = [
+            [InlineKeyboardButton("➕ ADD TO GROUP", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
+            [InlineKeyboardButton("💎 SHIHOIN CLAN", url=f'https://t.me/{SUPPORT_CHAT}'),
+             InlineKeyboardButton("📢 UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
+            [InlineKeyboardButton("⚡ SHUNPO COMMANDS", callback_data='help_main')]
+        ]
+        
         await send_yoruichi_photo(
             context,
             update.effective_chat.id,
-            caption
+            caption,
+            InlineKeyboardMarkup(keyboard)
         )
-
 async def help_command(update: Update, context: CallbackContext) -> None:
     await show_help_menu(update, context, page_index=0)
 
