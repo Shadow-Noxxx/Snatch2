@@ -17,9 +17,8 @@ ASSETS_DIR = BASE_DIR / "assets"
 
 # List of Yoruichi image files (now using local paths)
 YORUICHI_PHOTOS = [
-    str(ASSETS_DIR / "yoruichi1.jpg"),
-    str(ASSETS_DIR / "yoruichi2.jpg"),
-    str(ASSETS_DIR / "yoruichi3.jpg")
+    str(ASSETS_DIR / "y1.jpg"),
+    str(ASSETS_DIR / "y2.jpg")
 ]
 
 # Command categories with detailed descriptions
